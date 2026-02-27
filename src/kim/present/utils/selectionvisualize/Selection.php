@@ -66,6 +66,12 @@ final class Selection{
         public Vector3 $pos2
     ){}
 
+    /**
+     * Sends this selection visualization to the given player.
+     *
+     * If the player is already viewing this selection, the previous
+     * visualization is replaced while keeping internal state in sync.
+     */
     public function sendTo(Player $player) : void{
         $id = spl_object_id($player);
         if(isset($this->overrided[$id])){
@@ -107,6 +113,9 @@ final class Selection{
         $this->viewers[$id] = $player;
     }
 
+    /**
+     * Restores the original block for this selection for the given player.
+     */
     public function restoreFrom(Player $player) : void{
         $id = spl_object_id($player);
         if(!isset($this->overrided[$id])){
@@ -120,6 +129,9 @@ final class Selection{
         unset($this->overrided[$id], $this->viewers[$id]);
     }
 
+    /**
+     * Restores this selection visualization for all current viewers.
+     */
     public function restoreFromAll() : void{
         $viewers = $this->viewers;
         foreach($viewers as $player){

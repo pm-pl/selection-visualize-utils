@@ -31,14 +31,19 @@ use pocketmine\nbt\tag\CompoundTag;
 
 final class SelectionBlockData{
 
+    /** Network ID of the structure block used for visualization. */
     public readonly int $networkId;
 
+    /** Tile NBT containing bounding box configuration. */
     public readonly CompoundTag $tileNbt;
 
     public Vector3 $pos;
     private Vector3 $offset;
     private Vector3 $size;
 
+    /**
+     * Initializes default position, offset and size for the selection block.
+     */
     public function __construct(){
         $this->networkId = SelectionVisualizeUtils::getBlockNetworkId();
 
@@ -50,10 +55,14 @@ final class SelectionBlockData{
         $this->setSize(new Vector3(1, 1, 1));
     }
 
+    /** Returns a copy of the current structure offset. */
     public function getOffset() : Vector3{
         return clone $this->offset;
     }
 
+    /**
+     * Sets the structure offset and updates the underlying tile NBT.
+     */
     public function setOffset(Vector3 $offset) : self{
         $this->offset = $offset;
         $this->tileNbt
@@ -63,10 +72,14 @@ final class SelectionBlockData{
         return $this;
     }
 
+    /** Returns a copy of the current structure size. */
     public function getSize() : Vector3{
         return clone $this->size;
     }
 
+    /**
+     * Sets the structure size and updates the underlying tile NBT.
+     */
     public function setSize(Vector3 $size) : self{
         $this->size = $size;
         $this->tileNbt

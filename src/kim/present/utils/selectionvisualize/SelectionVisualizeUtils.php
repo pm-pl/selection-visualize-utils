@@ -47,7 +47,12 @@ final class SelectionVisualizeUtils{
         // NOOP
     }
 
-    /** @internal */
+    /**
+     * Returns the network ID of the internal structure block
+     * used to visualize selections.
+     *
+     * @internal
+     */
     public static function getBlockNetworkId() : int{
         if(isset(self::$blockNetworkId)){
             return self::$blockNetworkId;
