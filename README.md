@@ -97,7 +97,10 @@ $preview->clear($player);
 
 ## Preview
 
+> Below is a test video of the plugin in the `example/SelectionVisualizeUtilsTest`
+
 https://github.com/user-attachments/assets/d53bf2b6-f334-45d9-a5b7-8288c079591f
+
 
 -----
 
