@@ -44,8 +44,8 @@ use function spl_object_id;
 final class Selection{
 
     /**
-     * @var int[]
-     * @phpstan-var array<int, true>
+     * @var array<int, array<int, true>> $usedYMap
+     * @phpstan-var array<PlayerObjectId, array<int, true>>
      */
     private static array $usedYMap = [];
 
