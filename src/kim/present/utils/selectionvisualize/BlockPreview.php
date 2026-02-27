@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace kim\present\utils\selectionvisualize;
 
 use pocketmine\block\Block;
-use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\convert\TypeConverter;
@@ -210,30 +209,20 @@ final class BlockPreview{
                 UpdateBlockPacket::DATA_LAYER_NORMAL
             );
 
-            $previewRuntimeId = $entry->liquidBlock !== null
-                ? $this->getRuntimeIdFromBlock($entry->liquidBlock)
-                : $this->getPreviewRuntimeId();
-
-            $packets[] = UpdateBlockPacket::create(
-                $blockPosition,
-                $previewRuntimeId,
-                UpdateBlockPacket::FLAG_NETWORK,
-                UpdateBlockPacket::DATA_LAYER_LIQUID
-            );
+            if($entry->liquidBlock !== null){
+                $packets[] = UpdateBlockPacket::create(
+                    $blockPosition,
+                    $this->getRuntimeIdFromBlock($entry->liquidBlock),
+                    UpdateBlockPacket::FLAG_NETWORK,
+                    UpdateBlockPacket::DATA_LAYER_LIQUID
+                );
+            }
         }
 
         if($positions !== []){
             $this->lastPreview[$player->getName()] = $positions;
             NetworkBroadcastUtils::broadcastPackets([$player], $packets);
         }
-    }
-
-    private function getPreviewRuntimeId() : int{
-        /** @var int|null $runtimeId */
-        static $runtimeId = null;
-        return $runtimeId ??= $this->getRuntimeIdFromBlock(
-            VanillaBlocks::STAINED_HARDENED_GLASS()->setColor(DyeColor::LIGHT_BLUE())
-        );
     }
 
     private function getAirRuntimeId() : int{
