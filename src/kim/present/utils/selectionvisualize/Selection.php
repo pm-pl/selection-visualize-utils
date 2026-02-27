@@ -139,6 +139,10 @@ final class Selection{
         }
     }
 
+    /**
+     * Allocates the lowest free Y for the given (objectId, x, z) column and marks it in usedYMap.
+     * When the column is full, returns World::Y_MAX and marks that slot too so releaseY stays consistent.
+     */
     private static function getMinY(int $objectId, int $x, int $z) : int{
         for($y = World::Y_MIN; $y < World::Y_MAX; ++$y){
             $key = morton3d_encode($x, $y, $z);
@@ -147,6 +151,8 @@ final class Selection{
                 return $y;
             }
         }
+        $fallbackKey = morton3d_encode($x, World::Y_MAX, $z);
+        self::$usedYMap[$objectId][$fallbackKey] = true;
         return World::Y_MAX;
     }
 
