@@ -97,7 +97,7 @@ $preview->clear($player);
 
 ## Preview
 
-<img src="https://raw.githubusercontent.com/presentkim-pm/selection-visualize-utils/main/assets/preview.gif" alt="Logo"/>
+<img src="https://raw.githubusercontent.com/presentkim-pm/selection-visualize-utils/main/assets/preview.gif" alt="Logo" width="100%"/>
 
 -----
 
