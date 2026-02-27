@@ -95,6 +95,12 @@ $preview->clear($player);
 
 -----
 
+## Preview
+
+<img src="https://raw.githubusercontent.com/presentkim-pm/selection-visualize-utils/main/assets/preview.gif" alt="Logo"/>
+
+-----
+
 ## License
 
 Distributed under the **MIT**. See [LICENSE][license-url] for more information
