@@ -40,7 +40,25 @@ See [Official Poggit Virion Documentation](https://github.com/poggit/support/blo
 
 ## How to use?
 
-See [Main Document](https://github.com/presentkim-pm/selection-visualize-utils/blob/main/docs/README.md)
+### Basic example
+
+```php
+use kim\present\utils\selectionvisualize\Selection;
+use pocketmine\math\Vector3;
+use pocketmine\player\Player;
+
+/** @var Player $player */
+$pos1 = new Vector3(0, 64, 0);
+$pos2 = new Vector3(10, 70, 10);
+
+$selection = new Selection($pos1, $pos2);
+$selection->sendTo($player);
+
+// Later, when you want to restore the original block:
+$selection->restoreFrom($player);
+// or restore for every viewer:
+// $selection->restoreFromAll();
+```
 
 -----
 
