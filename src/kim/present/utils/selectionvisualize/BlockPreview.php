@@ -236,24 +236,23 @@ final class BlockPreview{
     }
 
     private function getPreviewRuntimeId() : int{
-        $block = VanillaBlocks::STAINED_GLASS()->setColor(DyeColor::LIGHT_BLUE());
-        $stateId = $block->getStateId();
-
-        $translator = TypeConverter::getInstance()->getBlockTranslator();
-        return $translator->internalIdToNetworkId($stateId);
-    }
-
-    private function getRuntimeIdFromBlock(Block $block) : int{
-        $translator = TypeConverter::getInstance()->getBlockTranslator();
-        return $translator->internalIdToNetworkId($block->getStateId());
+        /** @var int|null $runtimeId */
+        static $runtimeId = null;
+        return $runtimeId ??= $this->getRuntimeIdFromBlock(
+            VanillaBlocks::STAINED_HARDENED_GLASS()->setColor(DyeColor::LIGHT_BLUE())
+        );
     }
 
     private function getAirRuntimeId() : int{
-        $block = VanillaBlocks::AIR();
-        $stateId = $block->getStateId();
+        /** @var int|null $runtimeId */
+        static $runtimeId = null;
+        return $runtimeId ??= $this->getRuntimeIdFromBlock(VanillaBlocks::AIR());
+    }
 
-        $translator = TypeConverter::getInstance()->getBlockTranslator();
-        return $translator->internalIdToNetworkId($stateId);
+    private function getRuntimeIdFromBlock(Block $block) : int{
+        return TypeConverter::getInstance()
+                            ->getBlockTranslator()
+                            ->internalIdToNetworkId($block->getStateId());
     }
 }
 
