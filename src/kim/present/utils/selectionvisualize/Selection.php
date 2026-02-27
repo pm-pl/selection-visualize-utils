@@ -76,6 +76,22 @@ final class Selection{
         public Vector3 $pos2
     ){}
 
+    public function getMin() : Vector3{
+        return new Vector3(
+            (int) min($this->pos1->x, $this->pos2->x),
+            (int) min($this->pos1->y, $this->pos2->y),
+            (int) min($this->pos1->z, $this->pos2->z)
+        );
+    }
+
+    public function getMax() : Vector3{
+        return new Vector3(
+            (int) max($this->pos1->x, $this->pos2->x),
+            (int) max($this->pos1->y, $this->pos2->y),
+            (int) max($this->pos1->z, $this->pos2->z)
+        );
+    }
+
     /**
      * Sends this selection visualization to the given player.
      *
@@ -98,17 +114,8 @@ final class Selection{
         }
 
 
-        $min = new Vector3(
-            (int) min($this->pos1->x, $this->pos2->x),
-            (int) min($this->pos1->y, $this->pos2->y),
-            (int) min($this->pos1->z, $this->pos2->z)
-        );
-        $max = new Vector3(
-            (int) max($this->pos1->x, $this->pos2->x),
-            (int) max($this->pos1->y, $this->pos2->y),
-            (int) max($this->pos1->z, $this->pos2->z)
-        );
-
+        $min = $this->getMin();
+        $max = $this->getMax();
         $minY = self::getMinY($id, $min->x, $min->z);
 
         $data->pos = new Vector3($min->x, $minY, $min->z);
