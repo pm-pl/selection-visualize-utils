@@ -29,20 +29,28 @@ namespace kim\present\utils\selectionvisualize;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 
+/**
+ * Holds data for a single structure block used to visualize a selection:
+ * network ID, tile NBT (bounding box), position, offset and size.
+ * Used per-player by Selection to send/reuse one block per viewer.
+ */
 final class SelectionBlockData{
 
     /** Network ID of the structure block used for visualization. */
     public readonly int $networkId;
 
-    /** Tile NBT containing bounding box configuration. */
+    /** Tile NBT containing bounding box configuration (showBoundingBox, offsets, size). */
     public readonly CompoundTag $tileNbt;
 
+    /** World position where the structure block is placed (updated by Selection). */
     public Vector3 $pos;
+
     private Vector3 $offset;
     private Vector3 $size;
 
     /**
-     * Initializes default position, offset and size for the selection block.
+     * Builds a new block data with shared network ID and default NBT.
+     * Side effect: first call may trigger block type registration via SelectionVisualizeUtils.
      */
     public function __construct(){
         $this->networkId = SelectionVisualizeUtils::getBlockNetworkId();
@@ -55,13 +63,19 @@ final class SelectionBlockData{
         $this->setSize(new Vector3(1, 1, 1));
     }
 
-    /** Returns a copy of the current structure offset. */
+    /**
+     * Returns a copy of the structure offset (NBT x/y/zStructureOffset).
+     * No side effects.
+     */
     public function getOffset() : Vector3{
         return clone $this->offset;
     }
 
     /**
-     * Sets the structure offset and updates the underlying tile NBT.
+     * Sets the structure offset and writes it to tile NBT (x/y/zStructureOffset).
+     *
+     * @param Vector3 $offset Offset applied to the bounding box.
+     * Side effect: mutates $this->tileNbt.
      */
     public function setOffset(Vector3 $offset) : self{
         $this->offset = $offset;
@@ -72,13 +86,19 @@ final class SelectionBlockData{
         return $this;
     }
 
-    /** Returns a copy of the current structure size. */
+    /**
+     * Returns a copy of the structure size (NBT x/y/zStructureSize).
+     * No side effects.
+     */
     public function getSize() : Vector3{
         return clone $this->size;
     }
 
     /**
-     * Sets the structure size and updates the underlying tile NBT.
+     * Sets the structure size and writes it to tile NBT (x/y/zStructureSize).
+     *
+     * @param Vector3 $size Width, height and depth of the bounding box.
+     * Side effect: mutates $this->tileNbt.
      */
     public function setSize(Vector3 $size) : self{
         $this->size = $size;

@@ -40,7 +40,13 @@ use function min;
 use function morton3d_encode;
 use function spl_object_id;
 
-/** @phpstan-type PlayerObjectId int */
+/**
+ * Visualizes an axis-aligned 3D region (pos1–pos2) to players using structure blocks.
+ * Each player gets at most one structure block per Selection; sending again replaces
+ * that player's block and reuses the same slot (position is reallocated per player/column).
+ *
+ * @phpstan-type PlayerObjectId int
+ */
 final class Selection{
 
     /**
@@ -61,6 +67,10 @@ final class Selection{
      */
     private array $viewers = [];
 
+    /**
+     * @param Vector3 $pos1 First corner of the selection region.
+     * @param Vector3 $pos2 Second corner (axis-aligned box with pos1).
+     */
     public function __construct(
         public Vector3 $pos1,
         public Vector3 $pos2
@@ -69,8 +79,14 @@ final class Selection{
     /**
      * Sends this selection visualization to the given player.
      *
-     * If the player is already viewing this selection, the previous
-     * visualization is replaced while keeping internal state in sync.
+     * Behavior: one structure block per player per Selection. If this player already
+     * had a block for this Selection, it is restored first and the same block data
+     * is reused at a newly allocated position (per-player Y slot). Then the block
+     * and tile NBT are sent so the client shows the bounding box.
+     *
+     * @param Player $player Target to show the selection to.
+     * Side effects: sends UpdateBlockPacket and BlockActorDataPacket; registers
+     * this player as a viewer and allocates a Y slot for the structure block.
      */
     public function sendTo(Player $player) : void{
         $id = spl_object_id($player);
@@ -115,6 +131,12 @@ final class Selection{
 
     /**
      * Restores the original block for this selection for the given player.
+     *
+     * Removes the structure block shown to this player and frees the per-player
+     * Y slot so it can be reused. No-op if the player was not viewing this selection.
+     *
+     * @param Player $player Player whose visualization to remove.
+     * Side effects: sends block update packets; unregisters viewer and releases Y slot.
      */
     public function restoreFrom(Player $player) : void{
         $id = spl_object_id($player);
@@ -131,6 +153,12 @@ final class Selection{
 
     /**
      * Restores this selection visualization for all current viewers.
+     *
+     * Equivalent to calling restoreFrom() for each player that received sendTo();
+     * each player's structure block is replaced with the original block and their
+     * Y slot is released.
+     *
+     * Side effects: same as restoreFrom() for every registered viewer.
      */
     public function restoreFromAll() : void{
         $viewers = $this->viewers;

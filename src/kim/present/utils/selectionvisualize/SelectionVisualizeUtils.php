@@ -39,6 +39,10 @@ use pocketmine\data\bedrock\block\convert\BlockStateWriter;
 use pocketmine\network\mcpe\convert\TypeConverter;
 use pocketmine\world\format\io\GlobalBlockStateHandlers;
 
+/**
+ * Registers and caches the custom structure block type used for selection
+ * visualization; exposes its network ID for packet serialization.
+ */
 final class SelectionVisualizeUtils{
 
     private static int $blockNetworkId;
@@ -48,8 +52,12 @@ final class SelectionVisualizeUtils{
     }
 
     /**
-     * Returns the network ID of the internal structure block
-     * used to visualize selections.
+     * Returns the network ID of the internal structure block used to visualize selections.
+     * First call registers the block type with the runtime and caches the ID; later calls
+     * return the cached value.
+     *
+     * @return int Network block ID for UpdateBlockPacket, etc.
+     * Side effect: first call registers the block with GlobalBlockStateHandlers and RuntimeBlockStateRegistry.
      *
      * @internal
      */
