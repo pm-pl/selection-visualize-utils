@@ -121,7 +121,8 @@ final class Selection{
     }
 
     public function restoreFromAll() : void{
-        foreach($this->viewers as $player){
+        $viewers = $this->viewers;
+        foreach($viewers as $player){
             $this->restoreFrom($player);
         }
     }
