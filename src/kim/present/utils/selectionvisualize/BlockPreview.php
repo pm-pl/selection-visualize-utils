@@ -29,6 +29,7 @@ namespace kim\present\utils\selectionvisualize;
 use pocketmine\block\Block;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\convert\TypeConverter;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
@@ -100,36 +101,28 @@ final class BlockPreview{
      * @param Player $player Target player to clear preview for.
      */
     public function clear(Player $player) : void{
-        $positions = $this->lastPreview[$player->getName()] ?? null;
-        if($positions === null){
+        $playerName = $player->getName();
+        if(empty($this->lastPreview[$playerName])){
             return;
         }
 
-        $session = $player->getNetworkSession();
         $airRuntimeId = $this->getAirRuntimeId();
-
-        foreach($positions as $blockPosition){
-            $realBlock = $player->getWorld()->getBlockAt(
-                $blockPosition->getX(),
-                $blockPosition->getY(),
-                $blockPosition->getZ()
-            );
-
-            $session->sendDataPacket(UpdateBlockPacket::create(
+        $packets = [];
+        $blocks = [];
+        foreach($this->lastPreview[$playerName] as $blockPosition){
+            $packets[] = UpdateBlockPacket::create(
                 $blockPosition,
                 $airRuntimeId,
                 UpdateBlockPacket::FLAG_NETWORK,
                 UpdateBlockPacket::DATA_LAYER_LIQUID
-            ));
+            );
 
-            $realRuntimeId = $this->getRuntimeIdFromBlock($realBlock);
-            $session->sendDataPacket(UpdateBlockPacket::create(
-                $blockPosition,
-                $realRuntimeId,
-                UpdateBlockPacket::FLAG_NETWORK,
-                UpdateBlockPacket::DATA_LAYER_NORMAL
-            ));
+            $blocks[] = new Vector3($blockPosition->getX(), $blockPosition->getY(), $blockPosition->getZ());
         }
+        NetworkBroadcastUtils::broadcastPackets(
+            [$player],
+            [...$packets, ...$player->getWorld()->createBlockUpdatePackets($blocks)]
+        );
 
         unset($this->lastPreview[$player->getName()]);
     }
