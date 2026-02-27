@@ -152,6 +152,16 @@ final class Selection{
     }
 
     /**
+     * Returns whether this selection is currently shown to the given player.
+     *
+     * @param Player $player Player to check.
+     * @return bool True if sendTo() was called for this player and restoreFrom() has not been called since.
+     */
+    public function hasViewer(Player $player) : bool{
+        return isset($this->viewers[spl_object_id($player)]);
+    }
+
+    /**
      * Restores this selection visualization for all current viewers.
      *
      * Equivalent to calling restoreFrom() for each player that received sendTo();
