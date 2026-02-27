@@ -26,9 +26,11 @@
 
 ## About The Project
 
-:heavy_check_mark: Provides `Selection` class for display block selection to player
+:heavy_check_mark: Provides `Selection` class for display block selection to player  
+:heavy_check_mark: Provides `BlockPreview` class for temporary block previews (NORMAL + LIQUID layer)
 
-- `kim\present\utils\selectionvisualize\Selection`
+- `kim\present\utils\selectionvisualize\Selection`  
+- `kim\present\utils\selectionvisualize\BlockPreview`
 
 -----
 
@@ -58,6 +60,37 @@ $selection->sendTo($player);
 $selection->restoreFrom($player);
 // or restore for every viewer:
 // $selection->restoreFromAll();
+```
+
+### Block preview example
+
+```php
+use kim\present\utils\selectionvisualize\BlockPreview;
+use kim\present\utils\selectionvisualize\PreviewEntry;
+use pocketmine\block\VanillaBlocks;
+use pocketmine\player\Player;
+use pocketmine\plugin\PluginBase;
+use pocketmine\world\Position;
+
+/** @var PluginBase $plugin */
+/** @var Player $player */
+
+$preview = new BlockPreview($plugin);
+
+$world = $player->getWorld();
+$pos1 = new Position(0, 64, 0, $world);
+$pos2 = new Position(1, 64, 0, $world);
+$block = VanillaBlocks::STONE();
+$tintBlock = VanillaBlocks::RED_STAINED_GLASS();
+
+// Basic preview: stone on normal layer, tinted glass on liquid layer
+$preview->show($player,
+    new PreviewEntry($pos1, $block, $tintBlock),
+    new PreviewEntry($pos2, $block, $tintBlock),
+);
+
+// Later, when you want to clear the preview:
+$preview->clear($player);
 ```
 
 -----
