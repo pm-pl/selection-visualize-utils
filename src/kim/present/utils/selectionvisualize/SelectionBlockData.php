@@ -80,9 +80,9 @@ final class SelectionBlockData{
     public function setOffset(Vector3 $offset) : self{
         $this->offset = $offset;
         $this->tileNbt
-            ->setInt("xStructureOffset", $this->offset->x)
-            ->setInt("yStructureOffset", $this->offset->y)
-            ->setInt("zStructureOffset", $this->offset->z);
+            ->setInt("xStructureOffset", (int) $this->offset->x)
+            ->setInt("yStructureOffset", (int) $this->offset->y)
+            ->setInt("zStructureOffset", (int) $this->offset->z);
         return $this;
     }
 
@@ -103,9 +103,9 @@ final class SelectionBlockData{
     public function setSize(Vector3 $size) : self{
         $this->size = $size;
         $this->tileNbt
-            ->setInt("xStructureSize", $this->size->x)
-            ->setInt("yStructureSize", $this->size->y)
-            ->setInt("zStructureSize", $this->size->z);
+            ->setInt("xStructureSize", (int) $this->size->x)
+            ->setInt("yStructureSize", (int) $this->size->y)
+            ->setInt("zStructureSize", (int) $this->size->z);
         return $this;
     }
 }

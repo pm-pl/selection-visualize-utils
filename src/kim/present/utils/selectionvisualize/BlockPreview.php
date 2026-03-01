@@ -101,7 +101,7 @@ final class BlockPreview{
      */
     public function clear(Player $player) : void{
         $playerName = $player->getName();
-        if(empty($this->lastPreview[$playerName])){
+        if(!isset($this->lastPreview[$playerName]) || $this->lastPreview[$playerName] === []){
             return;
         }
 

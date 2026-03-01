@@ -116,7 +116,7 @@ final class Selection{
 
         $min = $this->getMin();
         $max = $this->getMax();
-        $minY = self::getMinY($id, $min->x, $min->z);
+        $minY = self::getMinY($id, (int) $min->x, (int) $min->z);
 
         $data->pos = new Vector3($min->x, $minY, $min->z);
         $data->setOffset(new Vector3(0, $min->y - $minY, 0));
@@ -154,7 +154,7 @@ final class Selection{
         $pos = $this->overrided[$id]->pos;
         NetworkBroadcastUtils::broadcastPackets([$player], $player->getWorld()->createBlockUpdatePackets([$pos]));
 
-        self::releaseY($id, $pos->x, $pos->y, $pos->z);
+        self::releaseY($id, (int) $pos->x, (int) $pos->y, (int) $pos->z);
         unset($this->overrided[$id], $this->viewers[$id]);
     }
 
@@ -203,7 +203,7 @@ final class Selection{
 
     private static function releaseY(int $objectId, int $x, int $y, int $z) : void{
         unset(self::$usedYMap[$objectId][morton3d_encode($x, $y, $z)]);
-        if(empty(self::$usedYMap[$objectId])){
+        if(self::$usedYMap[$objectId] === []){
             unset(self::$usedYMap[$objectId]);
         }
     }
